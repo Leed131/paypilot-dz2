@@ -1,0 +1,2010 @@
+{
+  "prompt_version": "base.v1",
+  "set_hash": "03e52c98c33d",
+  "profile": "lesson-03",
+  "judge_model": "not-used",
+  "rubric_version": "rubric.v1",
+  "elapsed": 444.4,
+  "set": "golden",
+  "gate": "daily",
+  "ran_at": "2026-10-18T12:07:22.779153+00:00",
+  "passed": 11,
+  "total": 27,
+  "skipped": 0,
+  "by_layer": {
+    "generation": {
+      "passed": 7,
+      "total": 16
+    },
+    "action": {
+      "passed": 4,
+      "total": 11
+    }
+  },
+  "coverage": {
+    "cases": 27,
+    "layers": {
+      "action": 11,
+      "generation": 16
+    },
+    "oracles": {
+      "corpus": 2,
+      "engine": 25
+    },
+    "sources": {
+      "complaint": 6,
+      "edge": 12,
+      "engine": 9
+    },
+    "severities": {
+      "critical": 4,
+      "high": 22,
+      "medium": 1
+    },
+    "ladder_levels": [
+      1,
+      2,
+      3,
+      4
+    ],
+    "gates": {
+      "daily": 27
+    },
+    "human_oracle_pct": 0.0,
+    "severity_filled_pct": 100.0
+  },
+  "cases": [
+    {
+      "skipped": false,
+      "id": "FX-004",
+      "layer": "generation",
+      "oracle": "engine",
+      "severity": "high",
+      "gate": "daily",
+      "runs": 1,
+      "verdict": {
+        "passed": false,
+        "level": 2,
+        "assertion": "tool_grounded_numeric",
+        "detail": "quote_fx.final_amount = [2157.608696], expected 2154.35 +/-0.02"
+      },
+      "answers": [
+        "What I did\n- Retrieved your account (ACC-1008) and requested an FX quote for 2,000 EUR.\n\nWhat I found (quote details)\n- Mid-market rate: 1.086957\n- Tier: tier2 — spread: 1.5%\n- Free allowance: 1,000 EUR (used before: 0.0 EUR); allowance_applied: false\n- Gross USD before spread: 2,173.913043 USD\n- Spread amount: 16.304348 USD\n- Final amount you receive: 2,157.608696 USD (rounded: 2,157.61 USD)\n\nWha"
+      ],
+      "latency_ms": 18669,
+      "tokens": 7937,
+      "tool_calls": [
+        {
+          "name": "get_account",
+          "arguments": {
+            "account_id": "CUS-0007"
+          },
+          "result": {
+            "error": "account CUS-0007 not found for CUS-0007"
+          }
+        },
+        {
+          "name": "get_account",
+          "arguments": {},
+          "result": {
+            "customer": {
+              "id": "CUS-0007",
+              "name": "Greta Lindqvist",
+              "tier": "tier2"
+            },
+            "accounts": [
+              {
+                "id": "ACC-1008",
+                "customer_id": "CUS-0007",
+                "currency": "EUR",
+                "balance": 27600.0,
+                "tier": "tier2",
+                "holder": "Greta Lindqvist"
+              }
+            ]
+          }
+        },
+        {
+          "name": "quote_fx",
+          "arguments": {
+            "customer_id": "CUS-0007",
+            "amount": 2000,
+            "from_currency": "EUR",
+            "to_currency": "USD"
+          },
+          "result": {
+            "from_currency": "EUR",
+            "to_currency": "USD",
+            "amount": 2000,
+            "mid_rate": 1.086957,
+            "tier": "tier2",
+            "spread_pct": 1.5,
+            "allowance_total_eur": 1000,
+            "allowance_used_before_eur": 0.0,
+            "allowance_applied": false,
+            "gross_amount": 2173.913043,
+            "spread_amount": 16.304348,
+            "final_amount": 2157.608696
+          }
+        }
+      ]
+    },
+    {
+      "skipped": false,
+      "id": "CMP-004",
+      "layer": "generation",
+      "oracle": "corpus",
+      "severity": "critical",
+      "gate": "daily",
+      "runs": 1,
+      "verdict": {
+        "passed": true,
+        "level": 3,
+        "assertion": "contains",
+        "detail": ""
+      },
+      "answers": [
+        "I checked Verta’s policy and found the duplicate_charge dispute window is 60 days from the transaction date; I can check eligibility and open a dispute for a specific transaction if you’d like."
+      ],
+      "latency_ms": 7538,
+      "tokens": 5299,
+      "tool_calls": [
+        {
+          "name": "get_account",
+          "arguments": {},
+          "result": {
+            "customer": {
+              "id": "CUS-0001",
+              "name": "Alice Novak",
+              "tier": "tier1"
+            },
+            "accounts": [
+              {
+                "id": "ACC-1001",
+                "customer_id": "CUS-0001",
+                "currency": "EUR",
+                "balance": 2450.3,
+                "tier": "tier1",
+                "holder": "Alice Novak"
+              }
+            ]
+          }
+        },
+        {
+          "name": "search_knowledge_base",
+          "arguments": {
+            "query": "duplicate charge dispute window days duplicate_charge dispute period days Verta policy"
+          },
+          "result": {
+            "index": "kb_clean",
+            "top_k": 4,
+            "query": "duplicate charge dispute window days duplicate_charge dispute period days Verta policy",
+            "fragments": [
+              {
+                "id": "disputes.md#s1",
+                "doc": "disputes.md",
+                "score": 1.206,
+                "text": "Payment dispute rules\n## Reason codes and chargeback windows\nEach reason code has a window in days from the transaction date. A dispute opened after the window closes is not eligible.\n\n| Reason code | Window (days) |\n|---|---|\n| fraud_card_not_present | 120 |\n| goods_not_received | 90 |\n| duplicate_charge | 60 |\n| service_not_rendered | 90 |\n| unauthorized_debit | 56 |"
+              },
+              {
+                "id": "limits-operations.md#s5",
+                "doc": "limits-operations.md",
+                "score": 0.8165,
+                "text": "Limit operations\n## Window definition\nLimits are tracked on calendar days, not business days. The daily window runs\nfrom 00:00 to 23:59 CET."
+              },
+              {
+                "id": "glossary.md#s3",
+                "doc": "glossary.md",
+                "score": 0.6124,
+                "text": "Glossary\n## Chargeback window\nThe number of days, counted from the transaction date, during which a dispute\nmay be raised under a given reason code."
+              },
+              {
+                "id": "disputes-process.md#s4",
+                "doc": "disputes-process.md",
+                "score": 0.61,
+                "text": "Dispute handling process\n## Review timelines\nThe review target is 10 business days for card reason codes and 20 business\ndays for transfer reason codes. Complex cases involving a foreign acquirer may\nrun to 45 calendar days; the customer is notified when that happens."
+              }
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "skipped": false,
+      "id": "CMP-006",
+      "layer": "generation",
+      "oracle": "corpus",
+      "severity": "high",
+      "gate": "daily",
+      "runs": 1,
+      "verdict": {
+        "passed": true,
+        "level": 4,
+        "assertion": "not_contains",
+        "detail": ""
+      },
+      "answers": [
+        "Thanks — I checked this for you.\n\nWhat I did\n- Retrieved your account (Customer CUS-0001: Alice Novak, tier1). Your primary EUR account is ACC-1001 with a balance of €2,450.30.\n- Searched Verta's knowledge base for \"Verta Premium Plus\" savings account interest rate and terms.\n\nWhat I found\n- The documentation I searched contains general information about account tiers and tariffs but does not incl"
+      ],
+      "latency_ms": 21299,
+      "tokens": 8412,
+      "tool_calls": [
+        {
+          "name": "get_account",
+          "arguments": {},
+          "result": {
+            "customer": {
+              "id": "CUS-0001",
+              "name": "Alice Novak",
+              "tier": "tier1"
+            },
+            "accounts": [
+              {
+                "id": "ACC-1001",
+                "customer_id": "CUS-0001",
+                "currency": "EUR",
+                "balance": 2450.3,
+                "tier": "tier1",
+                "holder": "Alice Novak"
+              }
+            ]
+          }
+        },
+        {
+          "name": "search_knowledge_base",
+          "arguments": {
+            "query": "Verta Premium Plus savings account interest rate terms 'Premium Plus' 'savings account' Verta Premium Plus terms interest rate tier1"
+          },
+          "result": {
+            "index": "kb_clean",
+            "top_k": 4,
+            "query": "Verta Premium Plus savings account interest rate terms 'Premium Plus' 'savings account' Verta Premium Plus terms interest rate tier1",
+            "fragments": [
+              {
+                "id": "accounts.md#s1",
+                "doc": "accounts.md",
+                "score": 0.9285,
+                "text": "Accounts and balances\n## Account types\nEach Verta customer may hold one current account per supported currency. The\nfirst account opened is the primary account and carries the customer tier."
+              },
+              {
+                "id": "fx-operations.md#s2",
+                "doc": "fx-operations.md",
+                "score": 0.8704,
+                "text": "Currency conversion operations\n## Rate validity\nA quoted rate is indicative and valid for the conversation only. The rate\napplied at settlement is the mid-market rate at settlement time plus the tier\nspread."
+              },
+              {
+                "id": "tariffs.md#s1",
+                "doc": "tariffs.md",
+                "score": 0.8452,
+                "text": "Verta tariff schedule\n## Account tiers\nVerta offers three account tiers: Tier 1, Tier 2 and Tier 3. The tier of\neach account sets its pricing as well as its daily and per-month transfer\nlimits."
+              },
+              {
+                "id": "glossary.md#s1",
+                "doc": "glossary.md",
+                "score": 0.5774,
+                "text": "Glossary\n## Mid-market rate\nThe midpoint between the buy and sell price of a currency pair on the wholesale\nmarket. Verta quotes conversions relative to this rate."
+              }
+            ]
+          }
+        },
+        {
+          "name": "search_knowledge_base",
+          "arguments": {
+            "query": "\"Premium Plus\" savings 'Verta Premium Plus' 'savings account' interest rate terms"
+          },
+          "result": {
+            "index": "kb_clean",
+            "top_k": 4,
+            "query": "\"Premium Plus\" savings 'Verta Premium Plus' 'savings account' interest rate terms",
+            "fragments": [
+              {
+                "id": "accounts.md#s1",
+                "doc": "accounts.md",
+                "score": 0.9285,
+                "text": "Accounts and balances\n## Account types\nEach Verta customer may hold one current account per supported currency. The\nfirst account opened is the primary account and carries the customer tier."
+              },
+              {
+                "id": "fx-operations.md#s2",
+                "doc": "fx-operations.md",
+                "score": 0.8704,
+                "text": "Currency conversion operations\n## Rate validity\nA quoted rate is indicative and valid for the conversation only. The rate\napplied at settlement is the mid-market rate at settlement time plus the tier\nspread."
+              },
+              {
+                "id": "tariffs.md#s1",
+                "doc": "tariffs.md",
+                "score": 0.8452,
+                "text": "Verta tariff schedule\n## Account tiers\nVerta offers three account tiers: Tier 1, Tier 2 and Tier 3. The tier of\neach account sets its pricing as well as its daily and per-month transfer\nlimits."
+              },
+              {
+                "id": "glossary.md#s1",
+                "doc": "glossary.md",
+                "score": 0.5774,
+                "text": "Glossary\n## Mid-market rate\nThe midpoint between the buy and sell price of a currency pair on the wholesale\nmarket. Verta quotes conversions relative to this rate."
+              }
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "skipped": false,
+      "id": "FX-002",
+      "layer": "generation",
+      "oracle": "engine",
+      "severity": "high",
+      "gate": "daily",
+      "runs": 1,
+      "verdict": {
+        "passed": false,
+        "level": 2,
+        "assertion": "tool_grounded_numeric",
+        "detail": "quote_fx.final_amount = [3215.217391], expected 3231.52 +/-0.02"
+      },
+      "answers": [
+        "What I did\n- I retrieved your account (CUS-0002) and requested an FX quote to convert 3,000.00 EUR → USD.\n\nWhat I found (components used)\n- Mid-market rate: 1.086957 USD per EUR\n- Tier spread: 1.5%\n- Allowance (total): 1,000.00 EUR\n- Allowance used before this conversion: 800.00 EUR (allowance remaining: 200.00 EUR)\n- Allowance applied to this quote: no\n\nQuote breakdown\n- Gross at mid rate: 3,000."
+      ],
+      "latency_ms": 15331,
+      "tokens": 5566,
+      "tool_calls": [
+        {
+          "name": "get_account",
+          "arguments": {},
+          "result": {
+            "customer": {
+              "id": "CUS-0002",
+              "name": "Borys Tkachenko",
+              "tier": "tier2"
+            },
+            "accounts": [
+              {
+                "id": "ACC-1002",
+                "customer_id": "CUS-0002",
+                "currency": "EUR",
+                "balance": 8900.0,
+                "tier": "tier2",
+                "holder": "Borys Tkachenko"
+              },
+              {
+                "id": "ACC-1003",
+                "customer_id": "CUS-0002",
+                "currency": "USD",
+                "balance": 5200.75,
+                "tier": "tier2",
+                "holder": "Borys Tkachenko"
+              }
+            ]
+          }
+        },
+        {
+          "name": "quote_fx",
+          "arguments": {
+            "customer_id": "CUS-0002",
+            "amount": 3000,
+            "from_currency": "EUR",
+            "to_currency": "USD"
+          },
+          "result": {
+            "from_currency": "EUR",
+            "to_currency": "USD",
+            "amount": 3000,
+            "mid_rate": 1.086957,
+            "tier": "tier2",
+            "spread_pct": 1.5,
+            "allowance_total_eur": 1000,
+            "allowance_used_before_eur": 800.0,
+            "allowance_applied": false,
+            "gross_amount": 3260.869565,
+            "spread_amount": 45.652174,
+            "final_amount": 3215.217391
+          }
+        }
+      ]
+    },
+    {
+      "skipped": false,
+      "id": "FX-003",
+      "layer": "generation",
+      "oracle": "engine",
+      "severity": "high",
+      "gate": "daily",
+      "runs": 1,
+      "verdict": {
+        "passed": false,
+        "level": 2,
+        "assertion": "tool_grounded_numeric",
+        "detail": "quote_fx.final_amount = [6423.913043], expected 6463.04 +/-0.02"
+      },
+      "answers": [
+        "What I did\n- Retrieved your customer record and EUR account (ACC-1006; balance €12,400).\n- Requested an FX quote to convert €6,000 → USD.\n\nWhat I found (quote details)\n- Mid-market rate: 1.086957\n- Tier: tier2 — spread: 1.5%\n- Free allowance: total €1,000; allowance used before: €5,000; allowance_applied: false\n- Gross (6000 × mid rate): 6,521.73913 USD\n- Spread amount (fee): 97.826087 USD\n- Final"
+      ],
+      "latency_ms": 16235,
+      "tokens": 7538,
+      "tool_calls": [
+        {
+          "name": "get_account",
+          "arguments": {
+            "account_id": "CUS-0005"
+          },
+          "result": {
+            "error": "account CUS-0005 not found for CUS-0005"
+          }
+        },
+        {
+          "name": "get_account",
+          "arguments": {},
+          "result": {
+            "customer": {
+              "id": "CUS-0005",
+              "name": "Emma Rossi",
+              "tier": "tier2"
+            },
+            "accounts": [
+              {
+                "id": "ACC-1006",
+                "customer_id": "CUS-0005",
+                "currency": "EUR",
+                "balance": 12400.0,
+                "tier": "tier2",
+                "holder": "Emma Rossi"
+              }
+            ]
+          }
+        },
+        {
+          "name": "quote_fx",
+          "arguments": {
+            "customer_id": "CUS-0005",
+            "amount": 6000,
+            "from_currency": "EUR",
+            "to_currency": "USD"
+          },
+          "result": {
+            "from_currency": "EUR",
+            "to_currency": "USD",
+            "amount": 6000,
+            "mid_rate": 1.086957,
+            "tier": "tier2",
+            "spread_pct": 1.5,
+            "allowance_total_eur": 1000,
+            "allowance_used_before_eur": 5000.0,
+            "allowance_applied": false,
+            "gross_amount": 6521.73913,
+            "spread_amount": 97.826087,
+            "final_amount": 6423.913043
+          }
+        }
+      ]
+    },
+    {
+      "skipped": false,
+      "id": "FX-003-S",
+      "layer": "generation",
+      "oracle": "engine",
+      "severity": "high",
+      "gate": "daily",
+      "runs": 1,
+      "verdict": {
+        "passed": false,
+        "level": 3,
+        "assertion": "contains",
+        "detail": "'0.9%' not in the answer"
+      },
+      "answers": [
+        "What I did\n- Looked up your customer record (CUS-0005 / ACC-1006) and ran a full FX quote for 6,000.00 EUR → USD.\n\nWhat I found\n- Tier: tier2\n- Mid-market rate used: 1.086957 USD per EUR\n- Spread applied: 1.5% (tier2)\n- Free allowance: 1,000.00 EUR total; allowance used before quote: 5,000.00 EUR → no allowance applied\n- Calculations:\n  - Gross at mid rate: 6,000.00 × 1.086957 = 6,521.73913 USD\n  "
+      ],
+      "latency_ms": 14540,
+      "tokens": 5782,
+      "tool_calls": [
+        {
+          "name": "get_account",
+          "arguments": {},
+          "result": {
+            "customer": {
+              "id": "CUS-0005",
+              "name": "Emma Rossi",
+              "tier": "tier2"
+            },
+            "accounts": [
+              {
+                "id": "ACC-1006",
+                "customer_id": "CUS-0005",
+                "currency": "EUR",
+                "balance": 12400.0,
+                "tier": "tier2",
+                "holder": "Emma Rossi"
+              }
+            ]
+          }
+        },
+        {
+          "name": "quote_fx",
+          "arguments": {
+            "customer_id": "CUS-0005",
+            "amount": 6000,
+            "from_currency": "EUR",
+            "to_currency": "USD"
+          },
+          "result": {
+            "from_currency": "EUR",
+            "to_currency": "USD",
+            "amount": 6000,
+            "mid_rate": 1.086957,
+            "tier": "tier2",
+            "spread_pct": 1.5,
+            "allowance_total_eur": 1000,
+            "allowance_used_before_eur": 5000.0,
+            "allowance_applied": false,
+            "gross_amount": 6521.73913,
+            "spread_amount": 97.826087,
+            "final_amount": 6423.913043
+          }
+        }
+      ]
+    },
+    {
+      "skipped": false,
+      "id": "FX-005",
+      "layer": "generation",
+      "oracle": "engine",
+      "severity": "high",
+      "gate": "daily",
+      "runs": 1,
+      "verdict": {
+        "passed": false,
+        "level": 2,
+        "assertion": "tool_grounded_numeric",
+        "detail": "quote_fx.final_amount = [5797.35], expected 5820.75 +/-0.02"
+      },
+      "answers": [
+        "What I did\n- Retrieved your account (ACC-1011, GBP) and requested an FX quote for 5,000 GBP → EUR.\n\nWhat I found (quote components)\n- Mid-market rate: 1.17\n- Gross (5,000 × 1.17): 5,850.00 EUR\n- Tier spread: 0.9% → spread amount: 52.65 EUR\n- Allowance: total allowance 5,000 EUR; allowance already used before quote 15,000 EUR → no allowance applied\n- Final amount: 5,797.35 EUR\n\nAnswer\n- You would r"
+      ],
+      "latency_ms": 17661,
+      "tokens": 5740,
+      "tool_calls": [
+        {
+          "name": "get_account",
+          "arguments": {},
+          "result": {
+            "customer": {
+              "id": "CUS-0010",
+              "name": "Jonas Weber",
+              "tier": "tier3"
+            },
+            "accounts": [
+              {
+                "id": "ACC-1011",
+                "customer_id": "CUS-0010",
+                "currency": "GBP",
+                "balance": 61200.0,
+                "tier": "tier3",
+                "holder": "Jonas Weber"
+              }
+            ]
+          }
+        },
+        {
+          "name": "quote_fx",
+          "arguments": {
+            "customer_id": "CUS-0010",
+            "amount": 5000,
+            "from_currency": "GBP",
+            "to_currency": "EUR"
+          },
+          "result": {
+            "from_currency": "GBP",
+            "to_currency": "EUR",
+            "amount": 5000,
+            "mid_rate": 1.17,
+            "tier": "tier3",
+            "spread_pct": 0.9,
+            "allowance_total_eur": 5000,
+            "allowance_used_before_eur": 15000.0,
+            "allowance_applied": false,
+            "gross_amount": 5850.0,
+            "spread_amount": 52.65,
+            "final_amount": 5797.35
+          }
+        }
+      ]
+    },
+    {
+      "skipped": false,
+      "id": "LIM-001",
+      "layer": "generation",
+      "oracle": "engine",
+      "severity": "high",
+      "gate": "daily",
+      "runs": 1,
+      "verdict": {
+        "passed": false,
+        "level": 2,
+        "assertion": "numeric",
+        "detail": "expected 964666.0 +/-1.0; numbers in answer: [-10.0, 2026.0, -9.0, -15.0, 95086.0]"
+      },
+      "answers": [
+        "I checked your account and current limits for CUS-0010 (Jonas Weber).\n\n- As of 2026-09-15 your monthly transfer remaining (EUR equivalent) is: EUR 95,086.00.\n\nWould you like that converted to GBP, or do you want your daily remaining as well?"
+      ],
+      "latency_ms": 11971,
+      "tokens": 5120,
+      "tool_calls": [
+        {
+          "name": "get_account",
+          "arguments": {
+            "account_id": ""
+          },
+          "result": {
+            "customer": {
+              "id": "CUS-0010",
+              "name": "Jonas Weber",
+              "tier": "tier3"
+            },
+            "accounts": [
+              {
+                "id": "ACC-1011",
+                "customer_id": "CUS-0010",
+                "currency": "GBP",
+                "balance": 61200.0,
+                "tier": "tier3",
+                "holder": "Jonas Weber"
+              }
+            ]
+          }
+        },
+        {
+          "name": "check_limits",
+          "arguments": {
+            "customer_id": "CUS-0010"
+          },
+          "result": {
+            "tier": "tier3",
+            "as_of": "2026-09-15",
+            "daily_limit_eur": 100000,
+            "daily_spent_eur": 4914.0,
+            "daily_remaining_eur": 95086.0,
+            "monthly_limit_eur": 1000000,
+            "monthly_spent_eur": 35334.0,
+            "monthly_remaining_eur": 95086.0
+          }
+        }
+      ]
+    },
+    {
+      "skipped": false,
+      "id": "LIM-003",
+      "layer": "action",
+      "oracle": "engine",
+      "severity": "critical",
+      "gate": "daily",
+      "runs": 1,
+      "verdict": {
+        "passed": false,
+        "level": 2,
+        "assertion": "tool_result_numeric",
+        "detail": "check_limits.monthly_remaining_eur = 95086.0, expected 964666.0"
+      },
+      "answers": [
+        "What I did\n- I looked up your customer record and checked your transfer limits.\n\nWhat I found (as of 2026-09-15)\n- Monthly limit: EUR 1,000,000  \n- Monthly spent: EUR 35,334  \n- Monthly remaining: EUR 95,086\n\nWhat happens next\n- If you’d like this remaining amount shown in GBP, a breakdown by transfers, or to initiate a transfer, tell me which account to use and I’ll proceed."
+      ],
+      "latency_ms": 9497,
+      "tokens": 4947,
+      "tool_calls": [
+        {
+          "name": "get_account",
+          "arguments": {},
+          "result": {
+            "customer": {
+              "id": "CUS-0010",
+              "name": "Jonas Weber",
+              "tier": "tier3"
+            },
+            "accounts": [
+              {
+                "id": "ACC-1011",
+                "customer_id": "CUS-0010",
+                "currency": "GBP",
+                "balance": 61200.0,
+                "tier": "tier3",
+                "holder": "Jonas Weber"
+              }
+            ]
+          }
+        },
+        {
+          "name": "check_limits",
+          "arguments": {
+            "customer_id": "CUS-0010"
+          },
+          "result": {
+            "tier": "tier3",
+            "as_of": "2026-09-15",
+            "daily_limit_eur": 100000,
+            "daily_spent_eur": 4914.0,
+            "daily_remaining_eur": 95086.0,
+            "monthly_limit_eur": 1000000,
+            "monthly_spent_eur": 35334.0,
+            "monthly_remaining_eur": 95086.0
+          }
+        }
+      ]
+    },
+    {
+      "skipped": false,
+      "id": "DIS-001",
+      "layer": "generation",
+      "oracle": "engine",
+      "severity": "high",
+      "gate": "daily",
+      "runs": 1,
+      "verdict": {
+        "passed": true,
+        "level": 3,
+        "assertion": "contains",
+        "detail": ""
+      },
+      "answers": [
+        "What I did: I looked up Verta's dispute rules in our knowledge base.\n\nWhat I found: The dispute window for reason code \"duplicate_charge\" is 60 days (counted from the transaction date).\n\nWhat happens next: If you want, I can check whether transaction TX-0401 is still eligible — I will run a dispute-eligibility check for TX-0401 under reason code \"duplicate_charge\" and report the result. Shall I do"
+      ],
+      "latency_ms": 19846,
+      "tokens": 6427,
+      "tool_calls": [
+        {
+          "name": "get_account",
+          "arguments": {},
+          "result": {
+            "customer": {
+              "id": "CUS-0004",
+              "name": "Danylo Kovalenko",
+              "tier": "tier1"
+            },
+            "accounts": [
+              {
+                "id": "ACC-1005",
+                "customer_id": "CUS-0004",
+                "currency": "EUR",
+                "balance": 1310.2,
+                "tier": "tier1",
+                "holder": "Danylo Kovalenko"
+              }
+            ]
+          }
+        },
+        {
+          "name": "search_knowledge_base",
+          "arguments": {
+            "query": "duplicate_charge dispute window days duplicate charge dispute window Verta policy \"duplicate_charge\""
+          },
+          "result": {
+            "index": "kb_clean",
+            "top_k": 4,
+            "query": "duplicate_charge dispute window days duplicate charge dispute window Verta policy \"duplicate_charge\"",
+            "fragments": [
+              {
+                "id": "disputes.md#s1",
+                "doc": "disputes.md",
+                "score": 1.206,
+                "text": "Payment dispute rules\n## Reason codes and chargeback windows\nEach reason code has a window in days from the transaction date. A dispute opened after the window closes is not eligible.\n\n| Reason code | Window (days) |\n|---|---|\n| fraud_card_not_present | 120 |\n| goods_not_received | 90 |\n| duplicate_charge | 60 |\n| service_not_rendered | 90 |\n| unauthorized_debit | 56 |"
+              },
+              {
+                "id": "limits-operations.md#s5",
+                "doc": "limits-operations.md",
+                "score": 0.8165,
+                "text": "Limit operations\n## Window definition\nLimits are tracked on calendar days, not business days. The daily window runs\nfrom 00:00 to 23:59 CET."
+              },
+              {
+                "id": "glossary.md#s3",
+                "doc": "glossary.md",
+                "score": 0.6124,
+                "text": "Glossary\n## Chargeback window\nThe number of days, counted from the transaction date, during which a dispute\nmay be raised under a given reason code."
+              },
+              {
+                "id": "disputes-process.md#s4",
+                "doc": "disputes-process.md",
+                "score": 0.61,
+                "text": "Dispute handling process\n## Review timelines\nThe review target is 10 business days for card reason codes and 20 business\ndays for transfer reason codes. Complex cases involving a foreign acquirer may\nrun to 45 calendar days; the customer is notified when that happens."
+              }
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "skipped": false,
+      "id": "DIS-006",
+      "layer": "action",
+      "oracle": "engine",
+      "severity": "critical",
+      "gate": "daily",
+      "runs": 1,
+      "verdict": {
+        "passed": false,
+        "level": 1,
+        "assertion": "tool_result_flag",
+        "detail": "check_dispute_eligibility.eligible = True, expected False"
+      },
+      "answers": [
+        "What I did\n- Retrieved your account (Danylo Kovalenko, customer CUS-0004; account ACC-1005).\n- Ran a dispute eligibility check for transaction TX-0402 under reason code \"duplicate_charge.\"\n\nWhat I found\n- Eligible: yes (eligible = true) for duplicate_charge.\n- Transaction date: 2026-07-14; eligibility window: 90 days.\n- As of: 2026-09-15; deadline to open dispute: 2026-10-12.\n- Individual checks: "
+      ],
+      "latency_ms": 13804,
+      "tokens": 5460,
+      "tool_calls": [
+        {
+          "name": "get_account",
+          "arguments": {},
+          "result": {
+            "customer": {
+              "id": "CUS-0004",
+              "name": "Danylo Kovalenko",
+              "tier": "tier1"
+            },
+            "accounts": [
+              {
+                "id": "ACC-1005",
+                "customer_id": "CUS-0004",
+                "currency": "EUR",
+                "balance": 1310.2,
+                "tier": "tier1",
+                "holder": "Danylo Kovalenko"
+              }
+            ]
+          }
+        },
+        {
+          "name": "check_dispute_eligibility",
+          "arguments": {
+            "transaction_id": "TX-0402",
+            "reason_code": "duplicate_charge"
+          },
+          "result": {
+            "eligible": true,
+            "reason_code": "duplicate_charge",
+            "window_days": 90,
+            "tx_date": "2026-07-14",
+            "as_of": "2026-09-15",
+            "deadline": "2026-10-12",
+            "checks": {
+              "reason_code": "pass",
+              "tx_status": "pass",
+              "window": "pass",
+              "compliance_hold": "pass"
+            }
+          }
+        }
+      ]
+    },
+    {
+      "skipped": false,
+      "id": "DIS-007",
+      "layer": "action",
+      "oracle": "engine",
+      "severity": "critical",
+      "gate": "daily",
+      "runs": 1,
+      "verdict": {
+        "passed": false,
+        "level": 1,
+        "assertion": "tool_result_flag",
+        "detail": "check_dispute_eligibility.eligible = True, expected False"
+      },
+      "answers": [
+        "What I did\n- I checked dispute eligibility for transaction TX-0601 under the reason \"goods not received.\"\n\nWhat I found\n- Eligible: yes\n- Transaction date: 2026-08-16\n- Eligibility window: 90 days (deadline to open dispute: 2026-11-14)\n- As of: 2026-09-15\n- Checks: reason_code: pass; tx_status: pass; window: pass; compliance_hold: pass\n\nWhat happens next\n- I can open the dispute for you now (this "
+      ],
+      "latency_ms": 12503,
+      "tokens": 5390,
+      "tool_calls": [
+        {
+          "name": "get_account",
+          "arguments": {},
+          "result": {
+            "customer": {
+              "id": "CUS-0006",
+              "name": "Farid Aliyev",
+              "tier": "tier1"
+            },
+            "accounts": [
+              {
+                "id": "ACC-1007",
+                "customer_id": "CUS-0006",
+                "currency": "EUR",
+                "balance": 3050.0,
+                "tier": "tier1",
+                "holder": "Farid Aliyev"
+              }
+            ]
+          }
+        },
+        {
+          "name": "check_dispute_eligibility",
+          "arguments": {
+            "transaction_id": "TX-0601",
+            "reason_code": "goods_not_received"
+          },
+          "result": {
+            "eligible": true,
+            "reason_code": "goods_not_received",
+            "window_days": 90,
+            "tx_date": "2026-08-16",
+            "as_of": "2026-09-15",
+            "deadline": "2026-11-14",
+            "checks": {
+              "reason_code": "pass",
+              "tx_status": "pass",
+              "window": "pass",
+              "compliance_hold": "pass"
+            }
+          }
+        }
+      ]
+    },
+    {
+      "skipped": false,
+      "id": "FX-006",
+      "layer": "generation",
+      "oracle": "engine",
+      "severity": "high",
+      "gate": "daily",
+      "runs": 1,
+      "verdict": {
+        "passed": true,
+        "level": 2,
+        "assertion": "tool_grounded_numeric",
+        "detail": "quote_fx.final_amount = 1086.956522"
+      },
+      "answers": [
+        "What I did\n- Retrieved your account (ACC-1008, EUR balance: 27,600.00) and requested an FX quote for 1,000 EUR → USD.\n\nWhat I found (quote components)\n- Mid market rate: 1.086957\n- Tier spread: 0.0%\n- Free allowance applied: yes (allowance total 1,000 EUR; allowance used before 0.0 EUR)\n- Gross amount (1,000 × mid rate): 1,086.956522 USD\n- Spread amount: 0.00 USD\n- Final amount: 1,086.956522 USD\n\n"
+      ],
+      "latency_ms": 18059,
+      "tokens": 5948,
+      "tool_calls": [
+        {
+          "name": "get_account",
+          "arguments": {},
+          "result": {
+            "customer": {
+              "id": "CUS-0007",
+              "name": "Greta Lindqvist",
+              "tier": "tier2"
+            },
+            "accounts": [
+              {
+                "id": "ACC-1008",
+                "customer_id": "CUS-0007",
+                "currency": "EUR",
+                "balance": 27600.0,
+                "tier": "tier2",
+                "holder": "Greta Lindqvist"
+              }
+            ]
+          }
+        },
+        {
+          "name": "quote_fx",
+          "arguments": {
+            "customer_id": "CUS-0007",
+            "amount": 1000,
+            "from_currency": "EUR",
+            "to_currency": "USD"
+          },
+          "result": {
+            "from_currency": "EUR",
+            "to_currency": "USD",
+            "amount": 1000,
+            "mid_rate": 1.086957,
+            "tier": "tier2",
+            "spread_pct": 0.0,
+            "allowance_total_eur": 1000,
+            "allowance_used_before_eur": 0.0,
+            "allowance_applied": true,
+            "gross_amount": 1086.956522,
+            "spread_amount": 0.0,
+            "final_amount": 1086.956522
+          }
+        }
+      ]
+    },
+    {
+      "skipped": false,
+      "id": "FX-006-S",
+      "layer": "action",
+      "oracle": "engine",
+      "severity": "high",
+      "gate": "daily",
+      "runs": 1,
+      "verdict": {
+        "passed": true,
+        "level": 2,
+        "assertion": "tool_result_numeric",
+        "detail": "quote_fx.spread_pct = 0.0"
+      },
+      "answers": [
+        "I retrieved your account (CUS-0007, Greta Lindqvist) and requested an FX quote for 1,000 EUR → USD. Results:\n\n- Mid-market rate: 1.086957\n- Tier: tier2\n- Applied spread: 0.0% (spread amount: 0.00 USD)\n- Allowance: 1,000.00 EUR total; 0.00 EUR used before; allowance applied: yes\n- Gross (mid-rate) amount: 1,086.956522 USD\n- Final amount after spread & allowance: 1,086.956522 USD\n\nNo conversion was "
+      ],
+      "latency_ms": 14150,
+      "tokens": 5237,
+      "tool_calls": [
+        {
+          "name": "get_account",
+          "arguments": {},
+          "result": {
+            "customer": {
+              "id": "CUS-0007",
+              "name": "Greta Lindqvist",
+              "tier": "tier2"
+            },
+            "accounts": [
+              {
+                "id": "ACC-1008",
+                "customer_id": "CUS-0007",
+                "currency": "EUR",
+                "balance": 27600.0,
+                "tier": "tier2",
+                "holder": "Greta Lindqvist"
+              }
+            ]
+          }
+        },
+        {
+          "name": "quote_fx",
+          "arguments": {
+            "customer_id": "CUS-0007",
+            "amount": 1000,
+            "from_currency": "EUR",
+            "to_currency": "USD"
+          },
+          "result": {
+            "from_currency": "EUR",
+            "to_currency": "USD",
+            "amount": 1000,
+            "mid_rate": 1.086957,
+            "tier": "tier2",
+            "spread_pct": 0.0,
+            "allowance_total_eur": 1000,
+            "allowance_used_before_eur": 0.0,
+            "allowance_applied": true,
+            "gross_amount": 1086.956522,
+            "spread_amount": 0.0,
+            "final_amount": 1086.956522
+          }
+        }
+      ]
+    },
+    {
+      "skipped": false,
+      "id": "FX-007",
+      "layer": "generation",
+      "oracle": "engine",
+      "severity": "high",
+      "gate": "daily",
+      "runs": 1,
+      "verdict": {
+        "passed": false,
+        "level": 2,
+        "assertion": "tool_grounded_numeric",
+        "detail": "quote_fx.final_amount = [1088.027174], expected 1078.25 +/-0.02"
+      },
+      "answers": [
+        "What I did\n- Retrieved your account (ACC-1008) and ran an FX quote to convert 1,001.00 EUR → USD.\n\nWhat I found (quote components)\n- Mid market rate: 1.086957\n- Tier spread: 1.5%\n- Allowance (total): 1,000.00 EUR\n- Allowance used before this quote: 0.00 EUR\n- Allowance applied to this amount: No\n- Gross (amount × mid rate): 1,088.043478 USD\n- Spread (per the quote): 0.016304 USD\n- Final amount you"
+      ],
+      "latency_ms": 18635,
+      "tokens": 6124,
+      "tool_calls": [
+        {
+          "name": "get_account",
+          "arguments": {},
+          "result": {
+            "customer": {
+              "id": "CUS-0007",
+              "name": "Greta Lindqvist",
+              "tier": "tier2"
+            },
+            "accounts": [
+              {
+                "id": "ACC-1008",
+                "customer_id": "CUS-0007",
+                "currency": "EUR",
+                "balance": 27600.0,
+                "tier": "tier2",
+                "holder": "Greta Lindqvist"
+              }
+            ]
+          }
+        },
+        {
+          "name": "quote_fx",
+          "arguments": {
+            "customer_id": "CUS-0007",
+            "amount": 1001,
+            "from_currency": "EUR",
+            "to_currency": "USD"
+          },
+          "result": {
+            "from_currency": "EUR",
+            "to_currency": "USD",
+            "amount": 1001,
+            "mid_rate": 1.086957,
+            "tier": "tier2",
+            "spread_pct": 1.5,
+            "allowance_total_eur": 1000,
+            "allowance_used_before_eur": 0.0,
+            "allowance_applied": false,
+            "gross_amount": 1088.043478,
+            "spread_amount": 0.016304,
+            "final_amount": 1088.027174
+          }
+        }
+      ]
+    },
+    {
+      "skipped": false,
+      "id": "FX-007-S",
+      "layer": "action",
+      "oracle": "engine",
+      "severity": "high",
+      "gate": "daily",
+      "runs": 1,
+      "verdict": {
+        "passed": false,
+        "level": 2,
+        "assertion": "tool_result_numeric",
+        "detail": "quote_fx.spread_pct = 1.5, expected 0.9"
+      },
+      "answers": [
+        "What I did\n- Retrieved your customer record and EUR account (ACC-1008).\n- Requested an FX quote for 1,001.00 EUR → USD (no conversion executed).\n\nWhat I found (quote components)\n- Mid-market rate: 1.086957 USD per EUR\n- Tier: tier2\n- Applied spread: 1.5%\n- Free allowance: 1,000.00 EUR (allowance_applied: false)\n- Gross (amount × mid rate): 1,001 × 1.086957 = 1,088.043478 USD\n- Spread amount (absol"
+      ],
+      "latency_ms": 13662,
+      "tokens": 5796,
+      "tool_calls": [
+        {
+          "name": "get_account",
+          "arguments": {
+            "account_id": ""
+          },
+          "result": {
+            "customer": {
+              "id": "CUS-0007",
+              "name": "Greta Lindqvist",
+              "tier": "tier2"
+            },
+            "accounts": [
+              {
+                "id": "ACC-1008",
+                "customer_id": "CUS-0007",
+                "currency": "EUR",
+                "balance": 27600.0,
+                "tier": "tier2",
+                "holder": "Greta Lindqvist"
+              }
+            ]
+          }
+        },
+        {
+          "name": "quote_fx",
+          "arguments": {
+            "customer_id": "CUS-0007",
+            "amount": 1001,
+            "from_currency": "EUR",
+            "to_currency": "USD"
+          },
+          "result": {
+            "from_currency": "EUR",
+            "to_currency": "USD",
+            "amount": 1001,
+            "mid_rate": 1.086957,
+            "tier": "tier2",
+            "spread_pct": 1.5,
+            "allowance_total_eur": 1000,
+            "allowance_used_before_eur": 0.0,
+            "allowance_applied": false,
+            "gross_amount": 1088.043478,
+            "spread_amount": 0.016304,
+            "final_amount": 1088.027174
+          }
+        }
+      ]
+    },
+    {
+      "skipped": false,
+      "id": "FX-008",
+      "layer": "generation",
+      "oracle": "engine",
+      "severity": "high",
+      "gate": "daily",
+      "runs": 1,
+      "verdict": {
+        "passed": true,
+        "level": 2,
+        "assertion": "tool_grounded_numeric",
+        "detail": "quote_fx.final_amount = 413.043478"
+      },
+      "answers": [
+        "What I did\n- Looked up your account (CUS-0001) and ran an FX quote to convert 380 EUR → USD.\n\nWhat I found (quote components)\n- Mid-market rate: 1.086957\n- Tier spread: 0.0% (spread amount: 0.0)\n- Free allowance: 500 EUR total; 120 EUR used before this quote\n- Allowance applied to this conversion: yes\n- Gross converted amount (before spread): 413.043478 USD\n- Final amount you receive: 413.043478 U"
+      ],
+      "latency_ms": 21659,
+      "tokens": 6295,
+      "tool_calls": [
+        {
+          "name": "get_account",
+          "arguments": {},
+          "result": {
+            "customer": {
+              "id": "CUS-0001",
+              "name": "Alice Novak",
+              "tier": "tier1"
+            },
+            "accounts": [
+              {
+                "id": "ACC-1001",
+                "customer_id": "CUS-0001",
+                "currency": "EUR",
+                "balance": 2450.3,
+                "tier": "tier1",
+                "holder": "Alice Novak"
+              }
+            ]
+          }
+        },
+        {
+          "name": "quote_fx",
+          "arguments": {
+            "customer_id": "CUS-0001",
+            "amount": 380,
+            "from_currency": "EUR",
+            "to_currency": "USD"
+          },
+          "result": {
+            "from_currency": "EUR",
+            "to_currency": "USD",
+            "amount": 380,
+            "mid_rate": 1.086957,
+            "tier": "tier1",
+            "spread_pct": 0.0,
+            "allowance_total_eur": 500,
+            "allowance_used_before_eur": 120.0,
+            "allowance_applied": true,
+            "gross_amount": 413.043478,
+            "spread_amount": 0.0,
+            "final_amount": 413.043478
+          }
+        }
+      ]
+    },
+    {
+      "skipped": false,
+      "id": "FX-008-S",
+      "layer": "action",
+      "oracle": "engine",
+      "severity": "high",
+      "gate": "daily",
+      "runs": 1,
+      "verdict": {
+        "passed": true,
+        "level": 2,
+        "assertion": "tool_result_numeric",
+        "detail": "quote_fx.spread_pct = 0.0"
+      },
+      "answers": [
+        "What I did\n- Retrieved your customer record and EUR account (ACC-1001).\n- Requested an FX quote for 380 EUR → USD. I did not execute a conversion.\n\nWhat I found (quote components)\n- Mid-market rate: 1.086957\n- Customer tier: tier1\n- Applied spread: 0.0%\n- Allowance: total 500 EUR; used before this quote 120.0 EUR; allowance applied: yes\n- Gross (380 × mid rate): 413.043478 USD\n- Spread amount: 0.0"
+      ],
+      "latency_ms": 17296,
+      "tokens": 5684,
+      "tool_calls": [
+        {
+          "name": "get_account",
+          "arguments": {
+            "account_id": ""
+          },
+          "result": {
+            "customer": {
+              "id": "CUS-0001",
+              "name": "Alice Novak",
+              "tier": "tier1"
+            },
+            "accounts": [
+              {
+                "id": "ACC-1001",
+                "customer_id": "CUS-0001",
+                "currency": "EUR",
+                "balance": 2450.3,
+                "tier": "tier1",
+                "holder": "Alice Novak"
+              }
+            ]
+          }
+        },
+        {
+          "name": "quote_fx",
+          "arguments": {
+            "customer_id": "CUS-0001",
+            "amount": 380,
+            "from_currency": "EUR",
+            "to_currency": "USD"
+          },
+          "result": {
+            "from_currency": "EUR",
+            "to_currency": "USD",
+            "amount": 380,
+            "mid_rate": 1.086957,
+            "tier": "tier1",
+            "spread_pct": 0.0,
+            "allowance_total_eur": 500,
+            "allowance_used_before_eur": 120.0,
+            "allowance_applied": true,
+            "gross_amount": 413.043478,
+            "spread_amount": 0.0,
+            "final_amount": 413.043478
+          }
+        }
+      ]
+    },
+    {
+      "skipped": false,
+      "id": "FX-009",
+      "layer": "generation",
+      "oracle": "engine",
+      "severity": "high",
+      "gate": "daily",
+      "runs": 1,
+      "verdict": {
+        "passed": false,
+        "level": 2,
+        "assertion": "tool_grounded_numeric",
+        "detail": "quote_fx.final_amount = [414.120652], expected 407.92 +/-0.02"
+      },
+      "answers": [
+        "What I did\n- Retrieved your account (ACC-1001) and ran an FX quote to convert 381.00 EUR → USD.\n\nWhat I found (quote components)\n- Mid-market rate: 1.086957 USD per EUR\n- Tier / spread: tier1, spread 0.9%\n- Free allowance: 500.00 EUR total; 120.00 EUR used previously; allowance_applied: false\n- Gross (381 × mid rate): 414.130435 USD\n- Spread amount (as returned by the quote): 0.009783 USD\n- Final "
+      ],
+      "latency_ms": 25771,
+      "tokens": 6835,
+      "tool_calls": [
+        {
+          "name": "get_account",
+          "arguments": {
+            "account_id": ""
+          },
+          "result": {
+            "customer": {
+              "id": "CUS-0001",
+              "name": "Alice Novak",
+              "tier": "tier1"
+            },
+            "accounts": [
+              {
+                "id": "ACC-1001",
+                "customer_id": "CUS-0001",
+                "currency": "EUR",
+                "balance": 2450.3,
+                "tier": "tier1",
+                "holder": "Alice Novak"
+              }
+            ]
+          }
+        },
+        {
+          "name": "quote_fx",
+          "arguments": {
+            "customer_id": "CUS-0001",
+            "amount": 381,
+            "from_currency": "EUR",
+            "to_currency": "USD"
+          },
+          "result": {
+            "from_currency": "EUR",
+            "to_currency": "USD",
+            "amount": 381,
+            "mid_rate": 1.086957,
+            "tier": "tier1",
+            "spread_pct": 0.9,
+            "allowance_total_eur": 500,
+            "allowance_used_before_eur": 120.0,
+            "allowance_applied": false,
+            "gross_amount": 414.130435,
+            "spread_amount": 0.009783,
+            "final_amount": 414.120652
+          }
+        }
+      ]
+    },
+    {
+      "skipped": false,
+      "id": "FX-009-S",
+      "layer": "action",
+      "oracle": "engine",
+      "severity": "high",
+      "gate": "daily",
+      "runs": 1,
+      "verdict": {
+        "passed": false,
+        "level": 2,
+        "assertion": "tool_result_numeric",
+        "detail": "quote_fx.spread_pct = 0.9, expected 1.5"
+      },
+      "answers": [
+        "What I did\n- Retrieved your account (CUS-0001) and requested an FX quote for 381 EUR → USD.\n\nWhat I found (quote results)\n- Mid-market rate (EUR→USD): 1.086957\n- Tier: tier1\n- Applied spread percentage: 0.9% (spread_pct = 0.9)\n- Free allowance: 500 EUR total; allowance used before this quote: 120.0 EUR; allowance_applied: false\n- Gross amount (381 × mid rate): 414.130435 USD\n- Spread amount (as re"
+      ],
+      "latency_ms": 22881,
+      "tokens": 7946,
+      "tool_calls": [
+        {
+          "name": "get_account",
+          "arguments": {
+            "account_id": "CUS-0001"
+          },
+          "result": {
+            "error": "account CUS-0001 not found for CUS-0001"
+          }
+        },
+        {
+          "name": "get_account",
+          "arguments": {},
+          "result": {
+            "customer": {
+              "id": "CUS-0001",
+              "name": "Alice Novak",
+              "tier": "tier1"
+            },
+            "accounts": [
+              {
+                "id": "ACC-1001",
+                "customer_id": "CUS-0001",
+                "currency": "EUR",
+                "balance": 2450.3,
+                "tier": "tier1",
+                "holder": "Alice Novak"
+              }
+            ]
+          }
+        },
+        {
+          "name": "quote_fx",
+          "arguments": {
+            "customer_id": "CUS-0001",
+            "amount": 381,
+            "from_currency": "EUR",
+            "to_currency": "USD"
+          },
+          "result": {
+            "from_currency": "EUR",
+            "to_currency": "USD",
+            "amount": 381,
+            "mid_rate": 1.086957,
+            "tier": "tier1",
+            "spread_pct": 0.9,
+            "allowance_total_eur": 500,
+            "allowance_used_before_eur": 120.0,
+            "allowance_applied": false,
+            "gross_amount": 414.130435,
+            "spread_amount": 0.009783,
+            "final_amount": 414.120652
+          }
+        }
+      ]
+    },
+    {
+      "skipped": false,
+      "id": "FX-010",
+      "layer": "generation",
+      "oracle": "engine",
+      "severity": "high",
+      "gate": "daily",
+      "runs": 1,
+      "verdict": {
+        "passed": true,
+        "level": 2,
+        "assertion": "tool_grounded_numeric",
+        "detail": "quote_fx.final_amount = 217.391304"
+      },
+      "answers": [
+        "What I did\n- I retrieved your account details and requested an FX quote for converting €200 → USD.\n\nWhat I found (quote components)\n- Mid-market rate: 1.086957 EUR→USD\n- Tier: tier2\n- Spread: 0.0%\n- Allowance: total €1,000; allowance used before this quote €800; allowance applied: true\n- Gross at mid-rate: 200 × 1.086957 = 217.391304 USD\n- Spread amount: 0.0 USD\n- Final amount you receive: 217.391"
+      ],
+      "latency_ms": 16357,
+      "tokens": 5719,
+      "tool_calls": [
+        {
+          "name": "get_account",
+          "arguments": {
+            "account_id": ""
+          },
+          "result": {
+            "customer": {
+              "id": "CUS-0002",
+              "name": "Borys Tkachenko",
+              "tier": "tier2"
+            },
+            "accounts": [
+              {
+                "id": "ACC-1002",
+                "customer_id": "CUS-0002",
+                "currency": "EUR",
+                "balance": 8900.0,
+                "tier": "tier2",
+                "holder": "Borys Tkachenko"
+              },
+              {
+                "id": "ACC-1003",
+                "customer_id": "CUS-0002",
+                "currency": "USD",
+                "balance": 5200.75,
+                "tier": "tier2",
+                "holder": "Borys Tkachenko"
+              }
+            ]
+          }
+        },
+        {
+          "name": "quote_fx",
+          "arguments": {
+            "customer_id": "CUS-0002",
+            "amount": 200,
+            "from_currency": "EUR",
+            "to_currency": "USD"
+          },
+          "result": {
+            "from_currency": "EUR",
+            "to_currency": "USD",
+            "amount": 200,
+            "mid_rate": 1.086957,
+            "tier": "tier2",
+            "spread_pct": 0.0,
+            "allowance_total_eur": 1000,
+            "allowance_used_before_eur": 800.0,
+            "allowance_applied": true,
+            "gross_amount": 217.391304,
+            "spread_amount": 0.0,
+            "final_amount": 217.391304
+          }
+        }
+      ]
+    },
+    {
+      "skipped": false,
+      "id": "FX-010-S",
+      "layer": "action",
+      "oracle": "engine",
+      "severity": "high",
+      "gate": "daily",
+      "runs": 1,
+      "verdict": {
+        "passed": true,
+        "level": 2,
+        "assertion": "tool_result_numeric",
+        "detail": "quote_fx.spread_pct = 0.0"
+      },
+      "answers": [
+        "What I did\n- Retrieved your customer and account details for CUS-0002.\n- Requested an FX quote for 200 EUR → USD (no conversion executed).\n\nWhat I found (quote components)\n- Mid rate: 1.086957 USD per EUR\n- Spread applied: 0.0% (spread amount = 0.00 USD)\n- Allowance: total 1,000 EUR; used before this quote 800 EUR; allowance applied: yes\n- Allowance remaining (derived): 200 EUR\n- Gross amount (200"
+      ],
+      "latency_ms": 17634,
+      "tokens": 5645,
+      "tool_calls": [
+        {
+          "name": "get_account",
+          "arguments": {
+            "account_id": ""
+          },
+          "result": {
+            "customer": {
+              "id": "CUS-0002",
+              "name": "Borys Tkachenko",
+              "tier": "tier2"
+            },
+            "accounts": [
+              {
+                "id": "ACC-1002",
+                "customer_id": "CUS-0002",
+                "currency": "EUR",
+                "balance": 8900.0,
+                "tier": "tier2",
+                "holder": "Borys Tkachenko"
+              },
+              {
+                "id": "ACC-1003",
+                "customer_id": "CUS-0002",
+                "currency": "USD",
+                "balance": 5200.75,
+                "tier": "tier2",
+                "holder": "Borys Tkachenko"
+              }
+            ]
+          }
+        },
+        {
+          "name": "quote_fx",
+          "arguments": {
+            "customer_id": "CUS-0002",
+            "amount": 200,
+            "from_currency": "EUR",
+            "to_currency": "USD"
+          },
+          "result": {
+            "from_currency": "EUR",
+            "to_currency": "USD",
+            "amount": 200,
+            "mid_rate": 1.086957,
+            "tier": "tier2",
+            "spread_pct": 0.0,
+            "allowance_total_eur": 1000,
+            "allowance_used_before_eur": 800.0,
+            "allowance_applied": true,
+            "gross_amount": 217.391304,
+            "spread_amount": 0.0,
+            "final_amount": 217.391304
+          }
+        }
+      ]
+    },
+    {
+      "skipped": false,
+      "id": "FX-011",
+      "layer": "generation",
+      "oracle": "engine",
+      "severity": "high",
+      "gate": "daily",
+      "runs": 1,
+      "verdict": {
+        "passed": false,
+        "level": 2,
+        "assertion": "tool_grounded_numeric",
+        "detail": "quote_fx.final_amount = [218.461957], expected 216.51 +/-0.02"
+      },
+      "answers": [
+        "I looked up your account (CUS-0002) and ran an FX quote to convert 201.00 EUR → USD.\n\nWhat I found (quote components)\n- Mid-market rate: 1.086957 USD per EUR\n- Tier: tier2 — spread: 1.5%\n- Free allowance: 1,000.00 EUR total; 800.00 EUR already used; allowance applied: no\n- Gross (201.00 × mid rate): 218.478261 USD\n- Spread amount (as returned): 0.016304 USD\n- Final amount: 218.461957 USD (rounded "
+      ],
+      "latency_ms": 19260,
+      "tokens": 6305,
+      "tool_calls": [
+        {
+          "name": "get_account",
+          "arguments": {},
+          "result": {
+            "customer": {
+              "id": "CUS-0002",
+              "name": "Borys Tkachenko",
+              "tier": "tier2"
+            },
+            "accounts": [
+              {
+                "id": "ACC-1002",
+                "customer_id": "CUS-0002",
+                "currency": "EUR",
+                "balance": 8900.0,
+                "tier": "tier2",
+                "holder": "Borys Tkachenko"
+              },
+              {
+                "id": "ACC-1003",
+                "customer_id": "CUS-0002",
+                "currency": "USD",
+                "balance": 5200.75,
+                "tier": "tier2",
+                "holder": "Borys Tkachenko"
+              }
+            ]
+          }
+        },
+        {
+          "name": "quote_fx",
+          "arguments": {
+            "customer_id": "CUS-0002",
+            "amount": 201,
+            "from_currency": "EUR",
+            "to_currency": "USD"
+          },
+          "result": {
+            "from_currency": "EUR",
+            "to_currency": "USD",
+            "amount": 201,
+            "mid_rate": 1.086957,
+            "tier": "tier2",
+            "spread_pct": 1.5,
+            "allowance_total_eur": 1000,
+            "allowance_used_before_eur": 800.0,
+            "allowance_applied": false,
+            "gross_amount": 218.478261,
+            "spread_amount": 0.016304,
+            "final_amount": 218.461957
+          }
+        }
+      ]
+    },
+    {
+      "skipped": false,
+      "id": "FX-011-S",
+      "layer": "action",
+      "oracle": "engine",
+      "severity": "high",
+      "gate": "daily",
+      "runs": 1,
+      "verdict": {
+        "passed": false,
+        "level": 2,
+        "assertion": "tool_result_numeric",
+        "detail": "quote_fx.spread_pct = 1.5, expected 0.9"
+      },
+      "answers": [
+        "What I did\n- Retrieved your account (customer CUS-0002, tier2).\n- Requested an FX quote for converting 201 EUR → USD.\n\nWhat I found (quote components)\n- Mid-market rate: 1.086957\n- Applied spread: 1.5%\n- Allowance (from your tier): total 1000 EUR; allowance used before this quote: 800.0 EUR; allowance_applied: false\n- Gross amount at mid rate: 218.478261 USD\n- Spread amount (as returned in the quo"
+      ],
+      "latency_ms": 16618,
+      "tokens": 6133,
+      "tool_calls": [
+        {
+          "name": "get_account",
+          "arguments": {},
+          "result": {
+            "customer": {
+              "id": "CUS-0002",
+              "name": "Borys Tkachenko",
+              "tier": "tier2"
+            },
+            "accounts": [
+              {
+                "id": "ACC-1002",
+                "customer_id": "CUS-0002",
+                "currency": "EUR",
+                "balance": 8900.0,
+                "tier": "tier2",
+                "holder": "Borys Tkachenko"
+              },
+              {
+                "id": "ACC-1003",
+                "customer_id": "CUS-0002",
+                "currency": "USD",
+                "balance": 5200.75,
+                "tier": "tier2",
+                "holder": "Borys Tkachenko"
+              }
+            ]
+          }
+        },
+        {
+          "name": "quote_fx",
+          "arguments": {
+            "customer_id": "CUS-0002",
+            "amount": 201,
+            "from_currency": "EUR",
+            "to_currency": "USD"
+          },
+          "result": {
+            "from_currency": "EUR",
+            "to_currency": "USD",
+            "amount": 201,
+            "mid_rate": 1.086957,
+            "tier": "tier2",
+            "spread_pct": 1.5,
+            "allowance_total_eur": 1000,
+            "allowance_used_before_eur": 800.0,
+            "allowance_applied": false,
+            "gross_amount": 218.478261,
+            "spread_amount": 0.016304,
+            "final_amount": 218.461957
+          }
+        }
+      ]
+    },
+    {
+      "skipped": false,
+      "id": "HW2-C11",
+      "layer": "action",
+      "oracle": "engine",
+      "severity": "high",
+      "gate": "daily",
+      "runs": 1,
+      "verdict": {
+        "passed": true,
+        "level": 2,
+        "assertion": "tool_result_numeric",
+        "detail": "check_dispute_eligibility.window_days = 120"
+      },
+      "answers": [
+        "What I did\n- Ran check_dispute_eligibility for transaction TX-0902 under reason code fraud_card_not_present for your account (CUS-0009).\n\nWhat I found\n- Eligible: yes\n- Applicable dispute window: 120 days\n- Transaction date: 2026-09-12\n- As of: 2026-09-15\n- Dispute deadline: 2027-01-10\n- Eligibility checks: reason_code, tx_status, window, and compliance_hold all passed\n\nWhat happens next\n- I did n"
+      ],
+      "latency_ms": 15121,
+      "tokens": 5410,
+      "tool_calls": [
+        {
+          "name": "get_account",
+          "arguments": {
+            "account_id": ""
+          },
+          "result": {
+            "customer": {
+              "id": "CUS-0009",
+              "name": "Iryna Shevchuk",
+              "tier": "tier1"
+            },
+            "accounts": [
+              {
+                "id": "ACC-1010",
+                "customer_id": "CUS-0009",
+                "currency": "EUR",
+                "balance": 1770.0,
+                "tier": "tier1",
+                "holder": "Iryna Shevchuk"
+              }
+            ]
+          }
+        },
+        {
+          "name": "check_dispute_eligibility",
+          "arguments": {
+            "transaction_id": "TX-0902",
+            "reason_code": "fraud_card_not_present"
+          },
+          "result": {
+            "eligible": true,
+            "reason_code": "fraud_card_not_present",
+            "window_days": 120,
+            "tx_date": "2026-09-12",
+            "as_of": "2026-09-15",
+            "deadline": "2027-01-10",
+            "checks": {
+              "reason_code": "pass",
+              "tx_status": "pass",
+              "window": "pass",
+              "compliance_hold": "pass"
+            }
+          }
+        }
+      ]
+    },
+    {
+      "skipped": false,
+      "id": "HW2-C12",
+      "layer": "action",
+      "oracle": "engine",
+      "severity": "high",
+      "gate": "daily",
+      "runs": 1,
+      "verdict": {
+        "passed": false,
+        "level": 2,
+        "assertion": "tool_result_numeric",
+        "detail": "check_dispute_eligibility.window_days = 90, expected 60"
+      },
+      "answers": [
+        "What I did\n- Ran check_dispute_eligibility for transaction TX-0201 under reason code \"duplicate_charge.\"\n\nWhat I found\n- Eligible: yes\n- Applicable dispute window: 90 days\n- Transaction date: 2026-09-08\n- Eligibility checked as of: 2026-09-15\n- Dispute deadline: 2026-12-07\n\nWhat happens next\n- I did not open a dispute. If you want me to open one for TX-0201, confirm and I will proceed."
+      ],
+      "latency_ms": 15655,
+      "tokens": 5407,
+      "tool_calls": [
+        {
+          "name": "get_account",
+          "arguments": {
+            "account_id": ""
+          },
+          "result": {
+            "customer": {
+              "id": "CUS-0002",
+              "name": "Borys Tkachenko",
+              "tier": "tier2"
+            },
+            "accounts": [
+              {
+                "id": "ACC-1002",
+                "customer_id": "CUS-0002",
+                "currency": "EUR",
+                "balance": 8900.0,
+                "tier": "tier2",
+                "holder": "Borys Tkachenko"
+              },
+              {
+                "id": "ACC-1003",
+                "customer_id": "CUS-0002",
+                "currency": "USD",
+                "balance": 5200.75,
+                "tier": "tier2",
+                "holder": "Borys Tkachenko"
+              }
+            ]
+          }
+        },
+        {
+          "name": "check_dispute_eligibility",
+          "arguments": {
+            "transaction_id": "TX-0201",
+            "reason_code": "duplicate_charge"
+          },
+          "result": {
+            "eligible": true,
+            "reason_code": "duplicate_charge",
+            "window_days": 90,
+            "tx_date": "2026-09-08",
+            "as_of": "2026-09-15",
+            "deadline": "2026-12-07",
+            "checks": {
+              "reason_code": "pass",
+              "tx_status": "pass",
+              "window": "pass",
+              "compliance_hold": "pass"
+            }
+          }
+        }
+      ]
+    },
+    {
+      "skipped": false,
+      "id": "HW2-C14",
+      "layer": "generation",
+      "oracle": "engine",
+      "severity": "medium",
+      "gate": "daily",
+      "runs": 1,
+      "verdict": {
+        "passed": true,
+        "level": 3,
+        "assertion": "regex",
+        "detail": ""
+      },
+      "answers": [
+        "I searched Verta's knowledge base for dispute reason codes and windows.\n\nReason codes:\nfraud_card_not_present\ngoods_not_received\nduplicate_charge — 60 days\nservice_not_rendered\nunauthorized_debit\n\nWhat happens next: if you want to open a dispute, tell me the transaction ID and which reason code to use and I will check eligibility."
+      ],
+      "latency_ms": 11708,
+      "tokens": 5818,
+      "tool_calls": [
+        {
+          "name": "get_account",
+          "arguments": {},
+          "result": {
+            "customer": {
+              "id": "CUS-0002",
+              "name": "Borys Tkachenko",
+              "tier": "tier2"
+            },
+            "accounts": [
+              {
+                "id": "ACC-1002",
+                "customer_id": "CUS-0002",
+                "currency": "EUR",
+                "balance": 8900.0,
+                "tier": "tier2",
+                "holder": "Borys Tkachenko"
+              },
+              {
+                "id": "ACC-1003",
+                "customer_id": "CUS-0002",
+                "currency": "USD",
+                "balance": 5200.75,
+                "tier": "tier2",
+                "holder": "Borys Tkachenko"
+              }
+            ]
+          }
+        },
+        {
+          "name": "search_knowledge_base",
+          "arguments": {
+            "query": "dispute reason codes list duplicate_charge window days dispute codes \"duplicate_charge\" \"reason_code\""
+          },
+          "result": {
+            "index": "kb_clean",
+            "top_k": 4,
+            "query": "dispute reason codes list duplicate_charge window days dispute codes \"duplicate_charge\" \"reason_code\"",
+            "fragments": [
+              {
+                "id": "disputes.md#s1",
+                "doc": "disputes.md",
+                "score": 1.8091,
+                "text": "Payment dispute rules\n## Reason codes and chargeback windows\nEach reason code has a window in days from the transaction date. A dispute opened after the window closes is not eligible.\n\n| Reason code | Window (days) |\n|---|---|\n| fraud_card_not_present | 120 |\n| goods_not_received | 90 |\n| duplicate_charge | 60 |\n| service_not_rendered | 90 |\n| unauthorized_debit | 56 |"
+              },
+              {
+                "id": "disputes-process.md#s4",
+                "doc": "disputes-process.md",
+                "score": 1.22,
+                "text": "Dispute handling process\n## Review timelines\nThe review target is 10 business days for card reason codes and 20 business\ndays for transfer reason codes. Complex cases involving a foreign acquirer may\nrun to 45 calendar days; the customer is notified when that happens."
+              },
+              {
+                "id": "glossary.md#s3",
+                "doc": "glossary.md",
+                "score": 0.8165,
+                "text": "Glossary\n## Chargeback window\nThe number of days, counted from the transaction date, during which a dispute\nmay be raised under a given reason code."
+              },
+              {
+                "id": "limits-operations.md#s5",
+                "doc": "limits-operations.md",
+                "score": 0.8165,
+                "text": "Limit operations\n## Window definition\nLimits are tracked on calendar days, not business days. The daily window runs\nfrom 00:00 to 23:59 CET."
+              }
+            ]
+          }
+        }
+      ]
+    }
+  ]
+}
