@@ -1,0 +1,49 @@
+{
+  "source": "saved llm.call spans",
+  "pricing_source": "https://developers.openai.com/api/docs/models/gpt-5-mini",
+  "pricing_checked_on": "2026-10-18",
+  "runs": [
+    {
+      "run": "baseline",
+      "requests": 27,
+      "model_calls": 85,
+      "input_tokens": 123731,
+      "output_tokens": 34875,
+      "report_tokens": 158606,
+      "models": [
+        "gpt-5-mini-2025-08-07"
+      ],
+      "matches_report": true,
+      "average_tokens_per_call": 1865.95,
+      "estimated_usd_without_cache_discount": 0.100683
+    },
+    {
+      "run": "lesson-03",
+      "requests": 27,
+      "model_calls": 85,
+      "input_tokens": 123821,
+      "output_tokens": 40099,
+      "report_tokens": 163920,
+      "models": [
+        "gpt-5-mini-2025-08-07"
+      ],
+      "matches_report": true,
+      "average_tokens_per_call": 1928.47,
+      "estimated_usd_without_cache_discount": 0.111153
+    },
+    {
+      "run": "prompt-change",
+      "requests": 27,
+      "model_calls": 85,
+      "input_tokens": 126680,
+      "output_tokens": 49696,
+      "report_tokens": 176376,
+      "models": [
+        "gpt-5-mini-2025-08-07"
+      ],
+      "matches_report": true,
+      "average_tokens_per_call": 2075.01,
+      "estimated_usd_without_cache_discount": 0.131062
+    }
+  ]
+}
